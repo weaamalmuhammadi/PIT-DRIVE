@@ -60,12 +60,12 @@
         "*.asset": "yaml",
         "*.meta": "yaml",
         "*.prefab": "yaml",
-        "*.unity": "yaml",
+        "*.unity": "yaml"
     },
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "PIT _ DRIVE.slnx"
+    "dotnet.defaultSolution": "PIT-DRIVE.slnx"
 }
