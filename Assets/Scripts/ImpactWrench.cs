@@ -6,7 +6,8 @@ public class ImpactWrench : MonoBehaviour
     public float wrenchRange = 1.5f;
     public LayerMask nutLayer;
     public float wrenchVisualDistance = 0.3f;
-    public float crosshairSize = 6f;
+    public float crosshairSize = 20f;
+    public float crosshairYOffset = 20f;
 
     Vector2 cursorPos;
     bool wasFocused;
@@ -34,23 +35,21 @@ public class ImpactWrench : MonoBehaviour
         }
 
         Ray aimRay = activeCam.ScreenPointToRay(new Vector3(cursorPos.x, cursorPos.y, 0));
-        bool aimHit = Physics.Raycast(aimRay, out RaycastHit aimHitInfo, wrenchRange, nutLayer);
+        bool didHit = Physics.Raycast(aimRay, out RaycastHit hit, wrenchRange, nutLayer);
 
         if (wrench != null)
-            wrench.position = aimHit ? aimHitInfo.point : aimRay.origin + aimRay.direction * wrenchVisualDistance;
+            wrench.position = didHit ? hit.point : aimRay.origin + aimRay.direction * wrenchVisualDistance;
 
-        Transform muzzle = wrench != null ? FindDeep(wrench, "SM_Drill_01_Spindel_B") : null;
-        Ray shootRay = muzzle != null ? new Ray(muzzle.position, aimRay.direction) : aimRay;
-        bool didHit = Physics.Raycast(shootRay, out RaycastHit hit, wrenchRange, nutLayer);
-
-        if (Mouse.current != null && Mouse.current.leftButton.isPressed && didHit)
+        if (didHit && Mouse.current != null)
         {
             LugNut nut = hit.collider.GetComponent<LugNut>();
             if (nut != null)
             {
                 WheelController wheel = FocusManager.Instance.CurrentWheel;
-                if (wheel.state == WheelState.Loosening) nut.Loosen(Time.deltaTime);
-                else if (wheel.state == WheelState.Tightening) nut.Tighten(Time.deltaTime);
+                if (wheel.state == WheelState.Loosening && Mouse.current.leftButton.isPressed)
+                    nut.Loosen(Time.deltaTime);
+                else if (wheel.state == WheelState.Tightening && Mouse.current.rightButton.isPressed)
+                    nut.Tighten(Time.deltaTime);
             }
         }
     }
@@ -58,8 +57,15 @@ public class ImpactWrench : MonoBehaviour
     void OnGUI()
     {
         if (!focused) return;
+        float x = cursorPos.x;
+        float y = Screen.height - cursorPos.y - crosshairYOffset;
         float half = crosshairSize / 2f;
-        GUI.DrawTexture(new Rect(cursorPos.x - half, Screen.height - cursorPos.y - half, crosshairSize, crosshairSize), Texture2D.whiteTexture);
+        float gap = crosshairSize * 0.2f;
+
+        GUI.DrawTexture(new Rect(x - half, y - 1f, half - gap, 2f), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(x + gap, y - 1f, half - gap, 2f), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(x - 1f, y - half, 2f, half - gap), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(x - 1f, y + gap, 2f, half - gap), Texture2D.whiteTexture);
     }
 
     static Transform FindDeep(Transform parent, string name)

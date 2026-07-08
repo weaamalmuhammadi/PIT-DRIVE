@@ -54,6 +54,29 @@ public class WheelController : MonoBehaviour
         StartCoroutine(SwapAnimation());
     }
 
+    public void ResetForNewService()
+    {
+        StopAllCoroutines();
+        state = WheelState.Attached;
+
+        if (oldWheelMesh != null)
+        {
+            oldWheelMesh.transform.localPosition = installLocalPos;
+            oldWheelMesh.SetActive(true);
+        }
+        if (newWheelMesh != null)
+        {
+            newWheelMesh.transform.localPosition = newSpawnLocalPos;
+            newWheelMesh.SetActive(false);
+        }
+
+        foreach (var nut in lugNuts)
+        {
+            nut.ResetPlacement();
+            nut.tightness = 100f;
+        }
+    }
+
     IEnumerator SwapAnimation()
     {
         const float duration = 0.3f;
@@ -92,5 +115,32 @@ public class WheelController : MonoBehaviour
         }
 
         state = WheelState.Tightening;
+    }
+
+    void OnGUI()
+    {
+        if (lugNuts == null || lugNuts.Count == 0) return;
+        if (state == WheelState.Attached || state == WheelState.Secured) return;
+
+        Camera cam = FocusManager.Instance != null && FocusManager.Instance.IsFocused
+            ? FocusManager.Instance.CurrentWheelCamera
+            : FocusManager.Instance != null ? FocusManager.Instance.mainCamera : Camera.main;
+        if (cam == null) return;
+
+        Vector3 screenPos = cam.WorldToScreenPoint(transform.position + Vector3.up * 0.3f);
+        if (screenPos.z < 0f) return;
+
+        float avgTightness = lugNuts.Average(n => n.tightness) / 100f;
+        float barWidth = 70f, barHeight = 10f;
+        float x = screenPos.x - barWidth / 2f;
+        float y = Screen.height - screenPos.y - barHeight / 2f;
+
+        GUI.color = new Color(0f, 0f, 0f, 0.6f);
+        GUI.DrawTexture(new Rect(x, y, barWidth, barHeight), Texture2D.whiteTexture);
+
+        GUI.color = Color.Lerp(Color.red, Color.green, avgTightness);
+        GUI.DrawTexture(new Rect(x, y, barWidth * avgTightness, barHeight), Texture2D.whiteTexture);
+
+        GUI.color = Color.white;
     }
 }
