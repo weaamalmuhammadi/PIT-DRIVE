@@ -10,6 +10,7 @@ public class FocusManager : MonoBehaviour
     public bool IsFocused { get; private set; }
     public Camera CurrentWheelCamera { get; private set; }
     public WheelController CurrentWheel { get; private set; }
+    public WheelFocusZone CurrentZone { get; private set; }
 
     void Awake()
     {
@@ -25,9 +26,13 @@ public class FocusManager : MonoBehaviour
     {
         if (IsFocused) return;
 
+        if (zone != CurrentZone)
+            zone.wheelController.ResetForNewService();
+
         IsFocused = true;
         CurrentWheel = zone.wheelController;
         CurrentWheelCamera = zone.wheelCamera;
+        CurrentZone = zone;
 
         mainCamera.gameObject.SetActive(false);
         zone.wheelCamera.gameObject.SetActive(true);
