@@ -10,7 +10,7 @@ public class MenuButtons : MonoBehaviour
 public void Play()
     {
 
-        SceneManager.LoadScene("Car Game"); 
+        SceneManager.LoadScene("Main Scene");
     }
     public void OpenSettings()
     {

@@ -27,6 +27,9 @@ public class PitStopTimer : MonoBehaviour
     {
         isRunning = false;
         Debug.Log($"Pit stop complete: {elapsed:F2}s");
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.FinishPitStop();
     }
 
     void OnGUI()
