@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
         car.transform.SetPositionAndRotation(afterPitPoint.position, afterPitPoint.rotation);
         car.SetActive(true);
         carController.enabled = true;
+        carController.ResetTrip();
         carCamera.gameObject.SetActive(true);
 
         player.SetActive(false);

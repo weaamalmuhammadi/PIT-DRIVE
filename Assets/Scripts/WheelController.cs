@@ -131,7 +131,7 @@ public class WheelController : MonoBehaviour
         if (screenPos.z < 0f) return;
 
         float avgTightness = lugNuts.Average(n => n.tightness) / 100f;
-        float barWidth = 70f, barHeight = 10f;
+        float barWidth = 220f, barHeight = 28f;
         float x = screenPos.x - barWidth / 2f;
         float y = Screen.height - screenPos.y - barHeight / 2f;
 

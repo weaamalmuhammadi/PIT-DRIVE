@@ -3,6 +3,7 @@ using UnityEngine;
 public class PitZone : MonoBehaviour
 {
     public bool CarInside { get; private set; }
+    public PitStopTimer timer;
 
     public void ResetCarInside() => CarInside = false;
 
@@ -13,6 +14,8 @@ public class PitZone : MonoBehaviour
             CarInside = true;
             if (GameManager.Instance != null)
                 GameManager.Instance.EnterPit();
+            if (timer != null)
+                timer.StartTimer();
         }
     }
 
