@@ -76,3 +76,7 @@ crashlytics-build.properties
 
 # Photoshop source files from imported asset packs — not needed by Unity at runtime, too large for git
 *.psd
+.vscode/settings.json
+*.json
+.vscode/settings.json
+/.vscode

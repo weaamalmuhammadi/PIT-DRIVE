@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "PIT _ DRIVE.slnx"
+    "dotnet.defaultSolution": "PIT-DRIVE.slnx"
 }
