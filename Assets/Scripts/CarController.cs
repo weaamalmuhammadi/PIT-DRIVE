@@ -28,7 +28,8 @@ public class CarController : MonoBehaviour
     [Range(0f, 1f)] public float wornSpeedMultiplier = 0.5f;
 
     public bool TireWarning => distanceKm >= kmBeforeTireWarning;
-
+    [Header("UI Input (Mobile)")]
+    private bool uiAccelerate, uiBrake, uiLeft, uiRight;
     Rigidbody rb;
     float currentSpeed;
     Vector3 moveDirection;
@@ -90,4 +91,9 @@ public class CarController : MonoBehaviour
         Quaternion deltaRotation = Quaternion.Euler(0f, turn * turnSpeed * turnAmount * driftMultiplier * Time.fixedDeltaTime, 0f);
         rb.MoveRotation(rb.rotation * deltaRotation);
     }
+    // هذه الدوال هي "البوابات" التي سيستخدمها الـ UI لإرسال الأوامر للسيارة
+    public void SetAccelerate(bool pressed) => uiAccelerate = pressed;
+    public void SetBrake(bool pressed) => uiBrake = pressed;
+    public void SetLeft(bool pressed) => uiLeft = pressed;
+    public void SetRight(bool pressed) => uiRight = pressed;
 }
